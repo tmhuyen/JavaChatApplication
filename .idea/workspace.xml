@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cecd1aa0-bc95-4a70-b870-2997c6786312" name="Changes" comment="Add basic features">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="cecd1aa0-bc95-4a70-b870-2997c6786312" name="Changes" comment="Fix GUI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/message_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/message_data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/ChatClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server/ChatConversation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/ChatConversation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server/ChatServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/ChatServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/Message.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +117,7 @@
       <workItem from="1703294128525" duration="195000" />
       <workItem from="1703294406528" duration="18347000" />
       <workItem from="1703316420869" duration="5420000" />
-      <workItem from="1703323140754" duration="3125000" />
+      <workItem from="1703323140754" duration="7608000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -143,7 +143,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703323292237</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fix GUI">
+      <option name="closed" value="true" />
+      <created>1703326652818</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1703326652818</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,6 +173,7 @@
     <MESSAGE value="First commit" />
     <MESSAGE value="Add GUI and test something" />
     <MESSAGE value="Add basic features" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add basic features" />
+    <MESSAGE value="Fix GUI" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix GUI" />
   </component>
 </project>

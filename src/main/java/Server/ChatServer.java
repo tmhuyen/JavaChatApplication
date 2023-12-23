@@ -157,6 +157,10 @@ class Server implements Runnable {
                 out = new PrintWriter(socket.getOutputStream(), true);
 
                 while (true) {
+                    //Load data
+                    User.getInstance().loadDataFromJson();
+                    Message.getInstance().loadDataFromJson();
+                    ChatConversation.getInstance().loadDataFromJson();
                     String line = in.readLine();
                     if (line.startsWith("LOGIN")) {
                         String username = in.readLine();
@@ -189,19 +193,20 @@ class Server implements Runnable {
                     } else if (line.startsWith("GET ONLINE USER")) {
                         String currentUsername = line.substring(15);
                         sendOnlineUserList(currentUsername);
-                    } else if (line.startsWith("GET GROUP CHAT LIST")){
+                    } else if (line.startsWith("GET GROUP CHAT LIST")) {
                         String username = line.substring(19);
                         ArrayList<String> groupChatName = ChatConversation.getInstance().getGroupChatNameList(username);
                         out.println("GROUP CHAT LIST" + groupChatName.size());
                         for (String chatName : groupChatName) {
                             out.println(chatName);
                         }
-                    }else if (line.startsWith("GET PRIVATE CHAT")) {
+                    } else if (line.startsWith("GET PRIVATE CHAT")) {
                         String chatId = checkExistPrivateChatAndCreate(line);
                         System.out.println(chatId);
                         ArrayList<String> messageList = Message.getInstance().getMessageList(chatId);
                         Collections.reverse(messageList);
                         out.println("PRIVATE MESSAGE LIST" + messageList.size());
+                        out.println(chatId);
                         for (String messageId : messageList) {
                             out.println(messageId);
                             out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
@@ -212,13 +217,36 @@ class Server implements Runnable {
                         ArrayList<String> messageList = Message.getInstance().getMessageList(chatId);
                         Collections.reverse(messageList);
                         out.println("GROUP MESSAGE LIST" + messageList.size());
+                        out.println(chatId);
                         for (String messageId : messageList) {
                             out.println(messageId);
                             out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
                         }
+                    } else if (line.startsWith("REMOVE MESSAGE")) {
+                        String removedMessageID = line.substring(14);
+                        String currentUserId = User.getInstance().findUserId(in.readLine());
+                        String chatId = Message.getInstance().getChatId(removedMessageID);
+                        if (Message.getInstance().checkSentUser(removedMessageID, currentUserId)) {
+                            Message.getInstance().removeMessage(removedMessageID);
+                            Message.getInstance().saveDataToJson();
+                            boolean isGroupChat = ChatConversation.getInstance().isGroupChat(chatId);
+                            ArrayList<String> messageList = Message.getInstance().getMessageList(chatId);
+                            Collections.reverse(messageList);
+                            if (isGroupChat) {
+                                out.println("GROUP MESSAGE LIST" + messageList.size());
+                            } else
+                                out.println("PRIVATE MESSAGE LIST" + messageList.size());
+                            out.println(chatId);
+                            for (String messageId : messageList) {
+                                out.println(messageId);
+                                out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
+                            }
+                        } else {
+                            out.println("REMOVE MESSAGE FAILED");
+                        }
                     }
                 }
-            } catch (IOException e) {
+        } catch (IOException e) {
                 System.out.println(e);
             } finally {
                 if (out != null) {

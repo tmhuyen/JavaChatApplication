@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static java.awt.Component.LEFT_ALIGNMENT;
@@ -24,6 +25,7 @@ public class ChatClient {
     DefaultListModel<String> ChatModel = new DefaultListModel<>();
     String currentUser;
     String tempUser;
+    String currentChatId;
     HashMap<String, String> currentChat = new HashMap<>();
     //Login frame
     JFrame frame = new JFrame("HCMUS _ 21127202 _ Chat application");
@@ -50,8 +52,7 @@ public class ChatClient {
     JPanel groupChatPanel = new JPanel();
     JList<String> privateChatList = new JList<String>(onlineUserModel);
     JList<String> groupChatList = new JList<String> (groupChatModel);
-    JList<String> privateChatMessage = new JList<String>(ChatModel);
-    JList<String> groupChatMessage = new JList<String>(ChatModel);
+    JList<String> chatMessageList = new JList<String>(ChatModel);
     JScrollPane privateChatScroller = new JScrollPane();
     JScrollPane groupChatScroller = new JScrollPane();
     JButton createGroupButton = new JButton("New Group");
@@ -182,9 +183,6 @@ public class ChatClient {
         groupChatScroller.setPreferredSize(new Dimension(600, 400));
 
         textField.setPreferredSize(new Dimension(400,30));
-        textbuttonPanel.add(privateBackButton);
-        textbuttonPanel.add(textField);
-        textbuttonPanel.add(removeButton);
 
         onlineUserModel.addElement("test");
         onlineUserModel.addElement("test2");
@@ -269,7 +267,28 @@ public class ChatClient {
                 }
             }
         });
-
+        removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Integer selectedMessage = chatMessageList.getSelectedIndex();
+                String removeMessageId = null;
+                if (selectedMessage == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a message to remove");
+                } else {
+                    String selectedMessageId = null;
+                    int count = currentChat.size() - 1;
+                    for (String messageId : currentChat.keySet()) {
+                        if (count == selectedMessage) {
+                            selectedMessageId = messageId;
+                            break;
+                        }
+                        count--;
+                    }
+                    System.out.println(selectedMessageId);
+                    out.println("REMOVE MESSAGE"+selectedMessageId);
+                    out.println(currentUser);
+                }
+            }
+        });
     }
 
     private void run() throws IOException {
@@ -287,6 +306,7 @@ public class ChatClient {
                     loginStatus.setText("Login Successful");
                     loginStatus.setForeground(Color.GREEN);
                     frame.setVisible(false);
+                    mainFrame.setTitle("Chat Application - " + currentUser);
                     mainFrame.setVisible(true);
                 } else {
                     loginStatus.setText("Login Failed");
@@ -314,7 +334,7 @@ public class ChatClient {
                     onlineUserModel.addElement(in.readLine());
                 }
                 privateChatList.setModel(onlineUserModel);
-                privateChatMessage.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                chatMessageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 privateChatScroller.setViewportView(privateChatList);
                 privateChatPanel.removeAll();
                 privateChatPanel.add(privateChatScroller);
@@ -329,7 +349,7 @@ public class ChatClient {
                     groupChatModel.addElement(in.readLine());
                 }
                 groupChatList.setModel(groupChatModel);
-                groupChatMessage.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                chatMessageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 groupChatScroller.setViewportView(groupChatList);
                 groupChatPanel.removeAll();
                 groupChatPanel.add(groupChatScroller);
@@ -341,6 +361,7 @@ public class ChatClient {
                 System.out.println(groupChatModel);
             } else if (line.startsWith("PRIVATE MESSAGE LIST")){
                 int NumberOfMessage = Integer.parseInt(line.substring(20));
+                currentChatId = in.readLine();
                 currentChat.clear();
                 ChatModel.clear();
                 for (int i = 0; i < NumberOfMessage; i++) {
@@ -356,8 +377,8 @@ public class ChatClient {
                 textbuttonPanel.add(removeButton);
                 textbuttonPanel.revalidate();
                 textbuttonPanel.repaint();
-                privateChatMessage.setModel(ChatModel);
-                privateChatScroller.setViewportView(privateChatMessage);
+                chatMessageList.setModel(ChatModel);
+                privateChatScroller.setViewportView(chatMessageList);
                 privateChatPanel.removeAll();
                 privateChatPanel.add(refreshPrivateMessage,BorderLayout.NORTH);
                 privateChatPanel.add(privateChatScroller,BorderLayout.CENTER);
@@ -367,6 +388,7 @@ public class ChatClient {
                 mainFrame.revalidate();
             } else if (line.startsWith("GROUP MESSAGE LIST")){
                 int NumberOfMessage = Integer.parseInt(line.substring(18));
+                currentChatId = in.readLine();
                 currentChat.clear();
                 ChatModel.clear();
                 for (int i = 0; i < NumberOfMessage; i++) {
@@ -382,14 +404,16 @@ public class ChatClient {
                 textbuttonPanel.add(removeButton);
                 textbuttonPanel.revalidate();
                 textbuttonPanel.repaint();
-                groupChatMessage.setModel(ChatModel);
-                groupChatScroller.setViewportView(groupChatMessage);
+                chatMessageList.setModel(ChatModel);
+                groupChatScroller.setViewportView(chatMessageList);
                 groupChatPanel.removeAll();
                 groupChatPanel.add(refreshGroupMessage,BorderLayout.NORTH);
                 groupChatPanel.add(groupChatScroller,BorderLayout.CENTER);
                 groupChatPanel.add(textbuttonPanel,BorderLayout.SOUTH);
                 groupChatPanel.revalidate();
                 groupChatPanel.repaint();
+            } else if (line.startsWith("REMOVE MESSAGE FAILED")){
+                JOptionPane.showMessageDialog(null, "This is not your message!");
             }
         }
     }

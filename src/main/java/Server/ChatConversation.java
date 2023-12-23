@@ -47,7 +47,9 @@ public class ChatConversation {
             return this.userId;
         }
     }
-
+    public boolean isGroupChat(String chatId) {
+        return this.chatDictionary.get(chatId).getType();
+    }
     public String findChatId(ArrayList<String> userId) {
         for (String chatId : chatDictionary.keySet()) {
             ChatDetail detail = chatDictionary.get(chatId);

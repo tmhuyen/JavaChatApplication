@@ -72,7 +72,9 @@ public class Message {
         }
         return false;
     }
-
+    public void removeMessage(String messageId) {
+        this.messageDictionary.remove(messageId);
+    }
     public ArrayList<String> getMessageList(String chatId) {
         ArrayList<String> messageList = new ArrayList<>();
         for (String messageId : messageDictionary.keySet()) {

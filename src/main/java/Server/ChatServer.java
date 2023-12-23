@@ -143,6 +143,19 @@ class Server implements Runnable {
             }
             return ChatConversation.getInstance().findChatId(userId);
         }
+        public String createGroupChat(String line){
+            //line = "CREATE GROUP CHAT|groupChatName|member1|member2|member3|..."
+            String substring = line.substring(18);
+            String[] groupChatInfo = substring.split("\\|");
+            String groupChatName = groupChatInfo[0];
+            ArrayList <String> userId = new ArrayList<>();
+            for (int i = 1; i < groupChatInfo.length; i++) {
+                userId.add(User.getInstance().findUserId(groupChatInfo[i]));
+            }
+            ChatConversation.getInstance().addNewGroupChat(groupChatName,userId);
+            ChatConversation.getInstance().saveDataToJson();
+            return ChatConversation.getInstance().findChatId(userId);
+        }
         public void sendOnlineUserList(String currentUsername) {
             ArrayList<String> onlineUser = OnlineUser.getInstance().getOnlineUsers();
             out.println("ONLINE USER" + onlineUser.size());
@@ -151,6 +164,14 @@ class Server implements Runnable {
             }
         }
 
+        public void printAllMessage(){
+            for (String messageId : Message.getInstance().messageDictionary.keySet()) {
+                System.out.println(messageId);
+                System.out.println(Message.getInstance().messageDictionary.get(messageId).getSentId());
+                System.out.println(Message.getInstance().messageDictionary.get(messageId).getChatId());
+                System.out.println(Message.getInstance().messageDictionary.get(messageId).getContent());
+            }
+        }
         public void run() {
             try {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -202,8 +223,14 @@ class Server implements Runnable {
                         }
                     } else if (line.startsWith("GET PRIVATE CHAT")) {
                         String chatId = checkExistPrivateChatAndCreate(line);
-                        System.out.println(chatId);
-                        ArrayList<String> messageList = Message.getInstance().getMessageList(chatId);
+                        printAllMessage();
+                        ArrayList<String> messageList = new ArrayList<>();
+                        messageList.clear();
+                        messageList = Message.getInstance().getMessageList(chatId);
+                        for (String messageId : messageList) {
+                            System.out.println(messageId);
+                            System.out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
+                        }
                         Collections.reverse(messageList);
                         out.println("PRIVATE MESSAGE LIST" + messageList.size());
                         out.println(chatId);
@@ -244,6 +271,32 @@ class Server implements Runnable {
                         } else {
                             out.println("REMOVE MESSAGE FAILED");
                         }
+                    } else if (line.startsWith("SEND MESSAGES")) {
+                        String userId = User.getInstance().findUserId(in.readLine());
+                        String chatId = in.readLine();
+                        String content = in.readLine();
+                        System.out.println(Message.getInstance().getNextMessageId());
+                        System.out.println(userId + " " + chatId + " " + content);
+                        Message.getInstance().addMessage(Message.getInstance().getNextMessageId(), userId, chatId, content);
+                        Message.getInstance().saveDataToJson();
+                        Message.getInstance().loadDataFromJson();
+                        boolean isGroupChat = ChatConversation.getInstance().isGroupChat(chatId);
+                        System.out.println(isGroupChat);
+                        ArrayList<String> messageList = Message.getInstance().getMessageList(chatId);
+                        System.out.println(messageList);
+                        Collections.reverse(messageList);
+                        if (isGroupChat) {
+                            out.println("GROUP MESSAGE LIST" + messageList.size());
+                        } else
+                            out.println("PRIVATE MESSAGE LIST" + messageList.size());
+                        out.println(chatId);
+                        for (String messageId : messageList) {
+                            out.println(messageId);
+                            out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
+                        }
+                    } else if (line.startsWith("CREATE GROUP CHAT")){
+                        String chatId = createGroupChat(line);
+                        out.println("ADD GROUP CHAT SUCCESS" + chatId);
                     }
                 }
         } catch (IOException e) {

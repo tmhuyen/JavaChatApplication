@@ -1,1 +1,1 @@
-{"message3":{"sentId":"user2","chatId":"chat2","content":"How are you?"},"message2":{"sentId":"user2","chatId":"chat2","content":"Hi"}}
+{"message4":{"sentId":"user2","chatId":"null","content":"hi"},"message3":{"sentId":"user2","chatId":"chat2","content":"hi"},"message6":{"sentId":"user6","chatId":"chat12","content":"how are you?"},"message5":{"sentId":"user6","chatId":"chat12","content":"hello"},"message2":{"sentId":"user4","chatId":"chat2","content":"hello"},"message1":{"sentId":"user4","chatId":"chat2","content":"hi"}}

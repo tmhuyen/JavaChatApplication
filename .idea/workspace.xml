@@ -4,13 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cecd1aa0-bc95-4a70-b870-2997c6786312" name="Changes" comment="Fix GUI">
+    <list default="true" id="cecd1aa0-bc95-4a70-b870-2997c6786312" name="Changes" comment="Fix one user cant remove other's messages">
+      <change afterPath="$PROJECT_DIR$/21127202.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UserGuilde.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/chat_data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/message_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/message_data.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/ChatClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server/ChatConversation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/ChatConversation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server/ChatServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/ChatServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client/ChatClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/ChatConversation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/ChatServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/Data.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/OnlineUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/TestDB.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ChatTabInterface.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Client.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ServerGUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestGUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/user_data.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +135,12 @@
       <workItem from="1703294128525" duration="195000" />
       <workItem from="1703294406528" duration="18347000" />
       <workItem from="1703316420869" duration="5420000" />
-      <workItem from="1703323140754" duration="7608000" />
+      <workItem from="1703323140754" duration="10595000" />
+      <workItem from="1703334165321" duration="9079000" />
+      <workItem from="1703345161240" duration="805000" />
+      <workItem from="1703346022918" duration="415000" />
+      <workItem from="1703346463585" duration="120000" />
+      <workItem from="1703346654833" duration="3108000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -151,7 +174,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703326652818</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fix one user cant remove other's messages">
+      <option name="closed" value="true" />
+      <created>1703330969665</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1703330969665</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -174,6 +205,7 @@
     <MESSAGE value="Add GUI and test something" />
     <MESSAGE value="Add basic features" />
     <MESSAGE value="Fix GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix GUI" />
+    <MESSAGE value="Fix one user cant remove other's messages" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix one user cant remove other's messages" />
   </component>
 </project>

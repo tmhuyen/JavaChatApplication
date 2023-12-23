@@ -47,6 +47,10 @@ public class ChatConversation {
             return this.userId;
         }
     }
+    public void addNewGroupChat(String groupChatName, ArrayList<String> userId) {
+        String chatId = getNextChatId();
+        this.chatDictionary.put(chatId, new ChatDetail(groupChatName, true, userId));
+    }
     public boolean isGroupChat(String chatId) {
         return this.chatDictionary.get(chatId).getType();
     }

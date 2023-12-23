@@ -1,5 +1,6 @@
 package Client;
 
+import Server.ChatConversation;
 import Server.Message;
 
 import javax.swing.*;
@@ -66,6 +67,15 @@ public class ChatClient {
     JButton privateBackButton = new JButton("Back");
     JButton groupBackButton = new JButton("Back");
     JTextField textField = new JTextField();
+    //Create new group
+    JFrame createGroupFrame;
+    JTextField groupNameField;
+    JList<String> onlineUsersList;
+    JPanel createGroupPanel1;
+    JPanel createGroupPanel2;
+    JButton addToGroupButton;
+    JLabel groupNameLabel = new JLabel("Enter name of the group: ");
+    JLabel onlineUsersLabel = new JLabel("Select user(s) to add to the group: ");
 
 
     public ChatClient() {
@@ -207,7 +217,6 @@ public class ChatClient {
         ChatPane.addTab("Group Chat", groupChatPanel);
         mainFrame.getContentPane().add(ChatPane, BorderLayout.CENTER);
         mainFrame.setLocationRelativeTo(null);
-
         //End of List panel
         /////////////
 
@@ -289,6 +298,86 @@ public class ChatClient {
                 }
             }
         });
+        textField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String message = textField.getText();
+                System.out.println(message);
+                if (message.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Please enter a message");
+                } else {
+                    out.println("SEND MESSAGES");
+                    out.println(currentUser);
+                    out.println(currentChatId);
+                    out.println(message);
+                    textField.setText("");
+                }
+            }
+        });
+        createGroupButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (onlineUserModel.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "There is no user online");
+                } else {
+                    createGroupPanel2.removeAll();
+                    onlineUsersList = new JList<String>(onlineUserModel);
+                    onlineUsersList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    createGroupPanel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+                    createGroupPanel2.setLayout(new BoxLayout(createGroupPanel2, BoxLayout.Y_AXIS));
+                    createGroupPanel2.add(onlineUsersLabel);
+                    createGroupPanel2.add(new JScrollPane(onlineUsersList));
+                    createGroupPanel2.repaint();
+                    createGroupFrame.setVisible(true);
+                }
+            }
+        });
+        //End of Chat panel
+        ////////////////////////////
+        createGroupFrame = new JFrame("Group Chat");
+        createGroupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        createGroupFrame.setSize(300, 600);
+
+        groupNameLabel = new JLabel("Enter name of the group: ");
+        groupNameField = new JTextField();
+        groupNameField.setPreferredSize(new Dimension(250, 30));
+        groupNameField.setColumns(10);
+
+        onlineUsersLabel = new JLabel("Select user(s) to add to the group: ");
+
+        addToGroupButton = new JButton("Add to Group");
+        createGroupPanel1 = new JPanel();
+        createGroupPanel2 = new JPanel();
+        createGroupPanel1.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+        addToGroupButton.setMargin(new Insets(0, 10, 10, 10));
+        createGroupPanel1.setLayout(new BoxLayout(createGroupPanel1, BoxLayout.Y_AXIS));
+        createGroupPanel1.add(groupNameLabel);
+        createGroupPanel1.add(groupNameField);
+
+        createGroupFrame.getContentPane().add(createGroupPanel1, BorderLayout.NORTH);
+        createGroupFrame.getContentPane().add(createGroupPanel2, BorderLayout.CENTER);
+        createGroupFrame.getContentPane().add(addToGroupButton, BorderLayout.SOUTH);
+        createGroupFrame.setLocationRelativeTo(null);
+        addToGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String groupName = groupNameField.getText();
+                ArrayList<String> selectedUsers = new ArrayList<>(onlineUsersList.getSelectedValuesList());
+                if (!selectedUsers.contains(currentUser)) {
+                    JOptionPane.showMessageDialog(null, "You must be in the group!");
+                }
+                if (selectedUsers.size() < 2) {
+                    JOptionPane.showMessageDialog(null, "You must select at least 2 users!");
+                }
+                String users = "";
+                for (String user : selectedUsers) {
+                    users += "|"+user;
+                }
+                out.println("CREATE GROUP CHAT"+"|"+groupName+users);
+                System.out.println("CREATE GROUP CHAT"+"|"+groupName+users);
+                createGroupFrame.setVisible(false);
+                // Logic to add selected users to the group
+                //System.out.println("Adding " + selectedUsers + " to " + groupName);
+            }
+        });
     }
 
     private void run() throws IOException {
@@ -357,11 +446,12 @@ public class ChatClient {
                 groupChatPanel.add(createGroupButton);
                 groupChatPanel.revalidate();
                 groupChatPanel.repaint();
-                mainFrame.revalidate();
                 System.out.println(groupChatModel);
             } else if (line.startsWith("PRIVATE MESSAGE LIST")){
                 int NumberOfMessage = Integer.parseInt(line.substring(20));
                 currentChatId = in.readLine();
+                System.out.println(currentChatId);
+                System.out.println(NumberOfMessage);
                 currentChat.clear();
                 ChatModel.clear();
                 for (int i = 0; i < NumberOfMessage; i++) {
@@ -385,7 +475,6 @@ public class ChatClient {
                 privateChatPanel.add(textbuttonPanel,BorderLayout.SOUTH);
                 privateChatPanel.revalidate();
                 privateChatPanel.repaint();
-                mainFrame.revalidate();
             } else if (line.startsWith("GROUP MESSAGE LIST")){
                 int NumberOfMessage = Integer.parseInt(line.substring(18));
                 currentChatId = in.readLine();
@@ -414,6 +503,9 @@ public class ChatClient {
                 groupChatPanel.repaint();
             } else if (line.startsWith("REMOVE MESSAGE FAILED")){
                 JOptionPane.showMessageDialog(null, "This is not your message!");
+            } else if (line.startsWith("ADD GROUP CHAT SUCCESS")){
+                JOptionPane.showMessageDialog(null, "Group chat created successfully!");
+                out.println("GET GROUP CHAT LIST"+currentUser);
             }
         }
     }

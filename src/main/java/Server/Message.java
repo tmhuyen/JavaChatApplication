@@ -80,6 +80,7 @@ public class Message {
         for (String messageId : messageDictionary.keySet()) {
             MessageDetail detail = messageDictionary.get(messageId);
             if (detail.getChatId().equals(chatId)) {
+                System.out.println("Message ID: " + messageId);
                 messageList.add(messageId);
             }
         }

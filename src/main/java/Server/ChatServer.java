@@ -207,7 +207,15 @@ class Server implements Runnable {
                             out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
                         }
                     } else if (line.startsWith("GET GROUP CHAT")) {
-                        System.out.println(line.substring(14));
+                        String groupChatName = line.substring(15);
+                        String chatId = ChatConversation.getInstance().getGroupChatId(groupChatName);
+                        ArrayList<String> messageList = Message.getInstance().getMessageList(chatId);
+                        Collections.reverse(messageList);
+                        out.println("GROUP MESSAGE LIST" + messageList.size());
+                        for (String messageId : messageList) {
+                            out.println(messageId);
+                            out.println(Message.getInstance().getSendUser(messageId) + ": " + Message.getInstance().getContent(messageId));
+                        }
                     }
                 }
             } catch (IOException e) {

@@ -97,7 +97,15 @@ public class ChatConversation {
     public ArrayList<String> getChatUser(String id) {
         return this.chatDictionary.get(id).userId;
     }
-
+    public String getGroupChatId(String groupChatName) {
+        for (String chatId : chatDictionary.keySet()) {
+            ChatDetail detail = chatDictionary.get(chatId);
+            if (detail.getGroupChatName().equals(groupChatName)) {
+                return chatId;
+            }
+        }
+        return null;
+    }
     public void saveDataToJson() {
         JSONObject jsonObject = new JSONObject();
         for (Map.Entry<String, ChatDetail> entry : chatDictionary.entrySet()) {

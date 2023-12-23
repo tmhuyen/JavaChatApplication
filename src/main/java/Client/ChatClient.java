@@ -64,7 +64,7 @@ public class ChatClient {
     JButton removeButton = new JButton("Remove");
     JButton privateBackButton = new JButton("Back");
     JButton groupBackButton = new JButton("Back");
-    JTextField textField = new JTextField("Enter something...");
+    JTextField textField = new JTextField();
 
 
     public ChatClient() {
@@ -153,9 +153,10 @@ public class ChatClient {
 
         LoginSignupPane.addTab("Sign Up", signupPanel);
         frame.getContentPane().add(LoginSignupPane);
+        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.pack();
+
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 out.println("LOGIN");
@@ -175,9 +176,15 @@ public class ChatClient {
         //End of LoginSignup panel
         ////////////////////////////
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setSize(750,520);
         privateChatScroller.setPreferredSize(new Dimension(600, 400));
         privateChatScroller.setAlignmentX(LEFT_ALIGNMENT);
         groupChatScroller.setPreferredSize(new Dimension(600, 400));
+
+        textField.setPreferredSize(new Dimension(400,30));
+        textbuttonPanel.add(privateBackButton);
+        textbuttonPanel.add(textField);
+        textbuttonPanel.add(removeButton);
 
         onlineUserModel.addElement("test");
         onlineUserModel.addElement("test2");
@@ -185,7 +192,6 @@ public class ChatClient {
         privateChatList.setModel(onlineUserModel);
         privateChatList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         privateChatList.setLayoutOrientation(JList.VERTICAL);
-
         privateChatScroller.setViewportView(privateChatList);
         privateChatPanel.add(privateChatScroller);
         privateChatPanel.add(refreshOnlineUserButton);
@@ -194,22 +200,19 @@ public class ChatClient {
         groupChatModel.addElement("test2");
         groupChatList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         groupChatList.setLayoutOrientation(JList.VERTICAL);
-
         groupChatScroller.setViewportView(groupChatList);
         groupChatPanel.add(groupChatScroller);
         groupChatPanel.add(refreshGroupChatButton);
         groupChatPanel.add(createGroupButton);
+
         ChatPane.addTab("Private Chat", privateChatPanel);
         ChatPane.addTab("Group Chat", groupChatPanel);
         mainFrame.getContentPane().add(ChatPane, BorderLayout.CENTER);
         mainFrame.setLocationRelativeTo(null);
-        mainFrame.pack();
+
         //End of List panel
         /////////////
-        textField.setPreferredSize(new Dimension(400,30));
-        textbuttonPanel.add(privateBackButton);
-        textbuttonPanel.add(textField);
-        textbuttonPanel.add(removeButton);
+
         refreshOnlineUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 out.println("GET ONLINE USER"+currentUser);
@@ -234,6 +237,11 @@ public class ChatClient {
         refreshPrivateMessage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 out.println("GET PRIVATE MESSAGE LIST"+currentUser);
+            }
+        });
+        refreshGroupMessage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                out.println("GET GROUP MESSAGE LIST"+currentUser);
             }
         });
         privateChatList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -306,6 +314,7 @@ public class ChatClient {
                     onlineUserModel.addElement(in.readLine());
                 }
                 privateChatList.setModel(onlineUserModel);
+                privateChatMessage.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 privateChatScroller.setViewportView(privateChatList);
                 privateChatPanel.removeAll();
                 privateChatPanel.add(privateChatScroller);
@@ -320,9 +329,19 @@ public class ChatClient {
                     groupChatModel.addElement(in.readLine());
                 }
                 groupChatList.setModel(groupChatModel);
+                groupChatMessage.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                groupChatScroller.setViewportView(groupChatList);
+                groupChatPanel.removeAll();
+                groupChatPanel.add(groupChatScroller);
+                groupChatPanel.add(refreshGroupChatButton);
+                groupChatPanel.add(createGroupButton);
+                groupChatPanel.revalidate();
+                groupChatPanel.repaint();
+                mainFrame.revalidate();
                 System.out.println(groupChatModel);
             } else if (line.startsWith("PRIVATE MESSAGE LIST")){
                 int NumberOfMessage = Integer.parseInt(line.substring(20));
+                currentChat.clear();
                 ChatModel.clear();
                 for (int i = 0; i < NumberOfMessage; i++) {
                     String messageId = in.readLine();
@@ -340,10 +359,37 @@ public class ChatClient {
                 privateChatMessage.setModel(ChatModel);
                 privateChatScroller.setViewportView(privateChatMessage);
                 privateChatPanel.removeAll();
-                privateChatPanel.add(privateChatScroller);
-                privateChatPanel.add(textbuttonPanel);
+                privateChatPanel.add(refreshPrivateMessage,BorderLayout.NORTH);
+                privateChatPanel.add(privateChatScroller,BorderLayout.CENTER);
+                privateChatPanel.add(textbuttonPanel,BorderLayout.SOUTH);
                 privateChatPanel.revalidate();
                 privateChatPanel.repaint();
+                mainFrame.revalidate();
+            } else if (line.startsWith("GROUP MESSAGE LIST")){
+                int NumberOfMessage = Integer.parseInt(line.substring(18));
+                currentChat.clear();
+                ChatModel.clear();
+                for (int i = 0; i < NumberOfMessage; i++) {
+                    String messageId = in.readLine();
+                    String content = in.readLine();
+                    currentChat.put(messageId, content);
+                    System.out.println(messageId + ": " + content);
+                    ChatModel.addElement(content);
+                }
+                textbuttonPanel.removeAll();
+                textbuttonPanel.add(groupBackButton);
+                textbuttonPanel.add(textField);
+                textbuttonPanel.add(removeButton);
+                textbuttonPanel.revalidate();
+                textbuttonPanel.repaint();
+                groupChatMessage.setModel(ChatModel);
+                groupChatScroller.setViewportView(groupChatMessage);
+                groupChatPanel.removeAll();
+                groupChatPanel.add(refreshGroupMessage,BorderLayout.NORTH);
+                groupChatPanel.add(groupChatScroller,BorderLayout.CENTER);
+                groupChatPanel.add(textbuttonPanel,BorderLayout.SOUTH);
+                groupChatPanel.revalidate();
+                groupChatPanel.repaint();
             }
         }
     }
